@@ -71,6 +71,13 @@ fields = ['Physics','Biology','Computer Science']
 
 
 st.sidebar.image('arXiv.png')
+
+st.sidebar.header('2.1 Select the field ')
+data_key = st.sidebar.selectbox('field:', data_dict.keys())
+
+with st.sidebar.header('2.2 Set Parameters '):
+    n_components = st.sidebar.slider('No. Topics', 6, 9, 12)
+
 st.title("The hottest scientific topics on arXiv in 2021 ")
 st.subheader('*This is an App that analyzes the abstracts of articles published on arXiv in 2021 and classifies your own abstract*')
 
@@ -126,7 +133,7 @@ def plot_topics(topics, data_abstract_ready):
 
     df = pd.DataFrame(out, columns=['word', 'topic_id', 'importance', 'word_count'])  
 
-    fig, axes = plt.subplots(3, 2, figsize=(16,16), sharey=True, dpi=160)
+    fig, axes = plt.subplots(3, 3, figsize=(16,16), sharey=True, dpi=160)
     cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
     for i, ax in enumerate(axes.flatten()):
         ax.bar(x='word', height="word_count", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.5, alpha=0.3, label='Word Count')
@@ -157,7 +164,7 @@ def wordclouds(topics):
                   colormap='tab10',
                   color_func=lambda *args, **kwargs: cols[i],
                   prefer_horizontal=1.0)
-    fig, axes = plt.subplots(2, 3, figsize=(16,16), sharex=True, sharey=True)
+    fig, axes = plt.subplots(3, 3, figsize=(16,16), sharex=True, sharey=True)
 
     for i, ax in enumerate(axes.flatten()):
         fig.add_subplot(ax)
@@ -228,8 +235,8 @@ def main():
     Publications2021 = pd.read_csv('Pubs_PhyMatCSBIO2021.csv') 
     articles(Publications2021)
 
-    data_key = st.sidebar.selectbox('2.1. Select the field', data_dict.keys())
-    
+    #data_key = st.sidebar.selectbox('2.1. Select the field', data_dict.keys())
+
     try:
         df = pd.read_csv(data_dict[data_key], parse_dates=['abstract'])
         st.markdown('** :small_orange_diamond: 2.0. This is the dataframe of ' + data_key + '. If you wish to analyze the topics of another field, please select the field on the sidebar at the left :point_left:**')
@@ -247,7 +254,7 @@ def main():
         #Build our Topic (LDA model)
         lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                            id2word=id2word,
-                                           num_topics=6, 
+                                           num_topics=n_components, 
                                            random_state=100,
                                            update_every=1,
                                            chunksize=10,
