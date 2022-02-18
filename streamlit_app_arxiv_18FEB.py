@@ -51,7 +51,7 @@ nlp = en_core_web_sm.load()
 
 
 stop_words = stopwords.words('english')
-stop_words.extend(['from', 'subject', 're', 'due', 'edu', 'observe', 'find', 'set', 'cal', 'solve', 'example', 'text', 
+stop_words.extend(['from', 'subject', 're', 'due', 'edu', 'observe', 'observed', 'find', 'set', 'cal', 'solve', 'example', 'text', 
                     'provide', 'increase', 'decrease', 'context', 'achieve', 'large', 'number', 'step', 'give', 
                     'equation', 'solution', 'obtain', 'non', 'paper', 'consider', 'propose', 'important', 'approach',
                      'high', 'low', 'first', 'discuss', 'system', 'term', 'problem', 'model', 'various', 'general', 'require', 'property', 
@@ -149,7 +149,7 @@ def plot_topics(topics, data_abstract_ready):
     fig.tight_layout(w_pad=2)    
     fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
     st.pyplot(fig)
-    st.markdown(imagedownload(plt,'plot_top_words_per_topic.pdf'), unsafe_allow_html=True)
+    st.markdown(':inbox_tray:' + imagedownload(plt,'plot_top_words_per_topic.pdf'), unsafe_allow_html=True)
 
 
 # 5. Wordcloud of Top N words in each topic
@@ -180,7 +180,7 @@ def wordclouds(topics):
     plt.margins(x=0, y=0)
     plt.tight_layout()
     st.pyplot(plt)
-    st.markdown(imagedownload(plt,'plot_top_words_per_topic.pdf'), unsafe_allow_html=True)
+    st.markdown(':inbox_tray:' + imagedownload(plt,'Wordclouds_per_topic.pdf'), unsafe_allow_html=True)
 
 # 6. Another function to clean and tokenize my text 
 def text_data_cleaning(sentence):
@@ -223,7 +223,7 @@ def articles(Publications2021):
 
     plt.legend()
     st.pyplot(plt)
-    st.markdown(imagedownload(plt,'plot_publications_in_2021.pdf'), unsafe_allow_html=True)
+    st.markdown(':inbox_tray:' + imagedownload(plt,'plot_publications_in_2021.pdf'), unsafe_allow_html=True)
 
 ##################################
 # MY MAIN (main) FUNCTION
@@ -265,7 +265,7 @@ def main():
         
         ## call my plot_topics function
         topics = lda_model.show_topics(formatted=False)
-        st.markdown('**2.2. These are the keywords that appear more often in the field of ' + data_key + ' when dividing it into six main topics**')
+        st.markdown('**2.3. These are the keywords that appear more often in the field of ' + data_key + ' when dividing it into ' + str(n_components) + ' main topics**')
         plot_topics(topics, data_abstract_ready)
 
         ## call my wordclouds function
@@ -278,6 +278,7 @@ def main():
 
 main()
     ##################################  HERE STARTS THE PART OF ML ######################################################
+#st.cache(suppress_st_warning=True)
 def my_predicting_machine(Abstract):
     st.write('Your abstract', Abstract)
 
@@ -314,6 +315,5 @@ st.markdown('**:small_orange_diamond: 3.0. In this part of the App, you can ente
 Abstract = st.text_input('Enter your abstract', ' ')
 
 if st.button('Press to classify your abstract'):
-    #st.cache(suppress_st_warning=True)
     my_predicting_machine(Abstract)
 
